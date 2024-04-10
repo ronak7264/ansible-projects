@@ -1,0 +1,164 @@
+********Implementation Plan
+
+***VAA1BL500
+
+config t
+interface port-channel50
+  shutdown
+end
+copy r s
+
+***VAA1BL501
+
+config t
+interface port-channel50
+  shutdown
+end
+copy r s
+
+***VAA1BL500
+
+config t
+vpc domain 50
+  no virtual peer-link destination 1.1.2.28 source 1.1.2.27 dscp 56
+int po50
+  switchport trunk allowed vlan all
+def int e1/22
+int e1/22
+  description vPC-Peer-Link
+  switchport
+  switchport mode trunk
+  channel-group 50 mode active
+  no shut
+def int e1/23
+int e1/23
+  description vPC-Peer-Link
+  switchport
+  switchport mode trunk
+  channel-group 50 mode active
+  no shut
+interface port-channel50
+  no shutdown
+end
+copy r s
+
+***VAA1BL501
+
+config t
+vpc domain 50
+  no virtual peer-link destination 1.1.2.27 source 1.1.2.28 dscp 56
+int po50
+  switchport trunk allowed vlan all
+def int e1/22
+int e1/22
+  description vPC-Peer-Link
+  switchport
+  switchport mode trunk
+  channel-group 50 mode active
+  no shut
+def int e1/23
+int e1/23
+  description vPC-Peer-Link
+  switchport
+  switchport mode trunk
+  channel-group 50 mode active
+  no shut
+interface port-channel50
+  no shutdown
+end
+copy r s
+
+******Backout Plan
+
+
+***VAA1BL500
+
+config t
+interface port-channel50
+  shutdown
+end
+copy r s
+
+***VAA1BL501
+
+config t
+interface port-channel50
+  shutdown
+end
+copy r s
+
+***VAA1BL500
+
+config t
+vpc domain 50
+  virtual peer-link destination 1.1.2.28 source 1.1.2.27 dscp 56
+def int e1/22
+interface Ethernet1/22
+  description Infra-VLAN-Port-Channel
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 1119,1123-1125
+  spanning-tree port type normal
+  channel-group 51 mode active
+  no shutdown
+def int e1/23
+interface Ethernet1/23
+  description Infra-VLAN-Port-Channel
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 1119,1123-1125
+  spanning-tree port type normal
+  channel-group 51 mode active
+  no shutdown
+interface port-channel50
+  no shutdown
+end
+copy r s
+
+***VAA1BL501
+
+config t
+vpc domain 50
+  virtual peer-link destination 1.1.2.27 source 1.1.2.28 dscp 56
+def int e1/22
+interface Ethernet1/22
+  description Infra-VLAN-Port-Channel
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 1119,1123-1125
+  spanning-tree port type normal
+  channel-group 51 mode active
+  no shutdown
+def int e1/23
+interface Ethernet1/23
+  description Infra-VLAN-Port-Channel
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 1119,1123-1125
+  spanning-tree port type normal
+  channel-group 51 mode active
+  no shutdown
+interface port-channel50
+  no shutdown
+end
+copy r s
+
+******Pre Test
+
+sh int status
+sh port-channel summary
+sh vpc
+sh vpc consistency-parameters vlans
+sh vlans
+sh spanning-tree vlan 1100
+sh ip bgp summary vrf all
+
+*******Post Test
+
+sh int status
+sh port-channel summary
+sh vpc
+sh vpc consistency-parameters vlans
+sh vlans
+sh spanning-tree vlan 1100
+sh ip bgp summary vrf all
