@@ -1,6 +1,6 @@
 ---
 
-- name: Test Ping
+- name: Test Ping1
   hosts: Nexus_Switches
   connection: local
   gather_facts: no
