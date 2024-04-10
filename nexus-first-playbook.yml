@@ -1,0 +1,22 @@
+---
+
+- name: Test Ping1
+  hosts: Nexus_Switches
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: Test Ping
+    nxos_ping:
+       dest: 192.168.233.1
+       vrf: management
+  - name: sh ip route
+    nxos_command:
+        commands: show ip route
+    register: output
+  - name: config from file
+    nxos_config:
+      src: /root/nexus-config.txt
+  - name: print
+    debug:
+      var: output.stdout_lines
